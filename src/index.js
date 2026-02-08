@@ -1,11 +1,15 @@
 require('dotenv').config();
 
 const express = require('express');
-const connectDB = require('./config/db');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const auth = require('./middleware/authorization');
+
+const connectDB = require('./config/db');
 
 const User = require('./models/User');
-const Collar = require('./models/Collar');
+const collarRouter = require('./routes/collar.routes');
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,100 +19,69 @@ connectDB();
 
 app.use(express.json());
 
+app.use('/collares', collarRouter);
+
 app.get('/', (req, res) => {
   res.status(200).send('ok');
 }
 );
 
-app.get('/collares', async (req, res) => {
+
+app.post('/users/login', async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const collares = await Collar.find({});
-    return res.status(200).json({ collares })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al obtener los collares',
-      error: error.message
-    })
-  }
-})
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
+    }
 
-app.post('/collares', async (req, res) => {
-  try {
-    const { nombre, precio, descripcion, imagen } = req.body;
-    const nuevoCollar = await Collar.create({ nombre, precio, descripcion, imagen });
-
-    if (!nuevoCollar) return res.status(400).json({ message: 'No se pudo crear el collar' });
- 
-    return res.status(201).json({datos: nuevoCollar })
-
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al crear el collar',
-      error: error.message  
-    })
-  }
-})
-
-app.put('/collares/:id', async (req, res) => {
-  try {
-    const { nombre, precio, descripcion } = req.body;
-    const collarActualizado = await Collar.findByIdAndUpdate(
-      req.params.id, { nombre, precio, descripcion }, 
-      { new: true, runValidators: true }
-    );
-
-    if (!collarActualizado) return res.status(404).json({ message: 'Collar no encontrado' });
-
-    return res.status(200).json({ datos: collarActualizado });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al actualizar el collar',
-      error: error.message
-    })
-  }
-})
-
-app.delete('/collares/:id', async (req, res) => {
-  try {
-    const collarEliminado = await Collar.findByIdAndDelete(req.params.id);
-
-    if (!collarEliminado) return res.status(404).json({ message: 'Collar no encontrado' });
-
-    return res.status(200).json({ message: 'Collar eliminado correctamente' });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al eliminar el collar',
-      error: error.message
-    })
-  }
-})
-
-app.post('/users/register', async (req, res) => {
-  const { username, nombre, email, password } = req.body;
-  try {
     let foundUser = await User.findOne({ email });
-    if (foundUser) {
-      return res.status(400).json({ message: 'El usuario ya existe' });
+    if (!foundUser) {
+      return res.status(400).json({ message: 'Usuario no existe' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const nombreUsuario = nombre || username;
-    if (!nombreUsuario) {
-      return res.status(400).json({ message: 'El nombre de usuario es requerido' });
+    if (!foundUser.password) {
+      return res.status(400).json({ message: 'Usuario sin contraseña registrada' });
     }
 
-    const newUser = new User({ 
-      nombre: nombreUsuario,
-      email, 
-      password: hashedPassword });
+    const correctPassword = await bcrypt.compare(password, foundUser.password);
+    
+    if (!correctPassword) {
+      return res.status(400).json({ message: 'El email o contraseña no coincide' });
+    }
 
-    await newUser.save();
-    return res.status(201).json({ message: 'Usuario registrado exitosamente' });
+    const payload = {
+        user: foundUser._id,
+        email: foundUser.email
+      };
+
+
+    jwt.sign(
+      payload,
+      process.env.SECRET,
+       { expiresIn: '1h' }, 
+       (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    }
+    );
   } catch (error) {
-    return res.status(500).json({ message: 'Error al registar usuario', error: error.message });
-  }   
+    res.json({ message: 'Error al obtener el token', 
+      error: error.message });
+  }
 });
+      
+app.get('/users/verify-user', auth, async (req, res) => { 
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error al verificar el usuario', 
+      error});
+  }
+});
+
+
 
 app.get('/users', async (req, res) => {
   try {
@@ -138,6 +111,28 @@ app.post('/users', async (req, res) => {
     })
   }
 })
+
+app.put('/users/update', async (req, res) => {
+  try {
+    const { id, nombre, email, password } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const usuarioActualizado = await User.findByIdAndUpdate(
+      req.user.id, 
+      { nombre, email, password: hashedPassword },
+      { new: true, runValidators: true }
+    );  
+    if (!usuarioActualizado) return res.status(404).json({ message: 'Usuario no encontrado' });
+    return res.status(200).json({ datos: usuarioActualizado });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Hubo un error al actualizar el usuario',
+      error: error.message
+    })
+  }
+})
+
 
 app.put('/users/:id', async (req, res) => {
   try {
@@ -173,5 +168,5 @@ app.delete('/users/:id', async (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log('El servidor está corriendo en el puero ' + PORT);
+  console.log('El servidor está corriendo en el puerto ' + PORT);
 });
