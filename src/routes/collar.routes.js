@@ -1,15 +1,17 @@
 const express = require('express');
+
 const {
-	getAllCollares,
-	createCollar,
-	updateCollarById,
-	deleteCollarById
+  getAllCollares,
+  createCollar,
+  updateCollarById,
+  deleteCollarById
 } = require('../controllers/collar.controller');
-const collarRouter = express.Router();
 
-collarRouter.get('/', getAllCollares);
-collarRouter.post('/', createCollar);
-collarRouter.put('/:id', updateCollarById);
-collarRouter.delete('/:id', deleteCollarById);
+const router = express.Router();
 
-module.exports = collarRouter;
+router.get('/', getAllCollares);
+router.post('/', createCollar);
+router.put('/:id', updateCollarById);
+router.delete('/:id', deleteCollarById);
+
+module.exports = router;
