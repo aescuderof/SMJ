@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 exports.createUser = async (req, res) => {
@@ -17,7 +18,7 @@ exports.createUser = async (req, res) => {
     }
 
     const newUser = new User({ 
-      nombre: nombreUsuario,
+      username: nombreUsuario,
       email, 
       password: hashedPassword });
 
@@ -84,13 +85,13 @@ exports.verifyUser = async (req, res) => {
 
 exports.updateUserById = async (req, res) => {
     try {
-    const { id, nombre, email, password } = req.body;
+    const { id, username, email, password } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const usuarioActualizado = await User.findByIdAndUpdate(
       req.user.id, 
-      { nombre, email, password: hashedPassword },
+      { username, email, password: hashedPassword },
       { new: true, runValidators: true }
     );  
     if (!usuarioActualizado) return res.status(404).json({ message: 'Usuario no encontrado' });

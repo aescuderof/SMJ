@@ -40,53 +40,7 @@ app.get('/users', async (req, res) => {
     }
 })
 
-app.post('/users', async (req, res) => {
-  try {
-    const { nombre, email, password } = req.body;
-    const nuevoUsuario = await User.create({ nombre, email, password });
 
-    if (!nuevoUsuario) return res.status(400).json({ message: 'No se pudo crear el usuario' });
-
-    return res.status(201).json({datos: nuevoUsuario })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al crear el usuario',
-      error: error.message  
-    })
-  }
-})
-
-app.put('/users/:id', async (req, res) => {
-  try {
-    const { nombre, email, password } = req.body;
-    const usuarioActualizado = await User.findByIdAndUpdate(
-      req.params.id, { nombre, email, password },
-      { new: true, runValidators: true }
-    );
-
-    if (!usuarioActualizado) return res.status(404).json({ message: 'Usuario no encontrado' });
-    return res.status(200).json({ datos: usuarioActualizado });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al actualizar el usuario',
-      error: error.message
-    })
-  } 
-})
-
-app.delete('/users/:id', async (req, res) => {
-  try {
-    const usuarioEliminado = await User.findByIdAndDelete(req.params.id);
-
-    if (!usuarioEliminado) return res.status(404).json({ message: 'Usuario no encontrado' });
-    return res.status(200).json({ message: 'Usuario eliminado correctamente' });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Hubo un error al eliminar el usuario',
-      error: error.message
-    })
-  }
-})
 
 
 app.listen(PORT, () => {

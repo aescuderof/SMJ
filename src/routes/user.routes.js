@@ -1,6 +1,5 @@
 const express = require('express');
-
-const authorization = require('../middleware/authorization');
+const auth = require('../middleware/authorization');
 const {
   createUser,
   login,
@@ -12,7 +11,7 @@ const userRouter = express.Router();
 
 userRouter.post('/register', createUser);
 userRouter.post('/login', login);
-userRouter.get('/verify-user', auth verifyUser);
-userRouter.put('/update, auth, updateUserById);
+userRouter.get('/verify-user', auth, verifyUser);
+userRouter.put('/update', auth, updateUserById);
 
 module.exports = userRouter;
