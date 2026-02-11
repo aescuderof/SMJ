@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -16,12 +17,12 @@ exports.createUser = async (req, res) => {
     if (!nombreUsuario) {
       return res.status(400).json({ message: 'El nombre de usuario es requerido' });
     }
-    const newCart = await Cart.create({})
+    const newCart = await Cart.create({});
 
     const newUser = new User({ 
       username: nombreUsuario,
       email, 
-      password: hashedPassword
+      password: hashedPassword,
       cart: newCart
     });
 

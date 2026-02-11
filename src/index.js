@@ -14,8 +14,8 @@ const app = express();
 connectDB();
 
 const whiteList = [
-  'http:localhost:3000',
-]
+  'http://localhost:3000'
+];
 
 const corsOptions = {
   origin: function(origin, callback) {
@@ -24,8 +24,8 @@ const corsOptions = {
     if(whiteList.includes(origin)) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'))
-    },
+      callback(new Error('Not allowed by CORS'));
+    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true

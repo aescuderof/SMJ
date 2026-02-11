@@ -22,12 +22,12 @@ const userSchema = new mongoose.Schema({
     country: {
         type: String,
         default: ''
-    }
-     address: {
+    },
+    address: {
         type: String,
         default: ''
-    }
-     zipcode: {
+    },
+    zipcode: {
         type: Number,
         default: 0
     }
