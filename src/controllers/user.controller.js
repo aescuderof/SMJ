@@ -16,11 +16,14 @@ exports.createUser = async (req, res) => {
     if (!nombreUsuario) {
       return res.status(400).json({ message: 'El nombre de usuario es requerido' });
     }
+    const newCart = await Cart.create({})
 
     const newUser = new User({ 
       username: nombreUsuario,
       email, 
-      password: hashedPassword });
+      password: hashedPassword
+      cart: newCart
+    });
 
     await newUser.save();
     return res.status(201).json({ message: 'Usuario registrado exitosamente' });
