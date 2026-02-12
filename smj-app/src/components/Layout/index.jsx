@@ -1,9 +1,18 @@
-const Footer = () => {
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
+import Footer from "./Footer";
+
+const Layout = () => {
     return (
-        <div className="footer">
-            <p>Copyright © 2024 SMJ. All rights reserved.</p>
-        </div>
+        <>
+         <Header />
+                <main>
+                    <Outlet />
+                </main>
+            <Footer />
+            </> 
     );
 };
 
-export default Footer;
+export default Layout;
+
