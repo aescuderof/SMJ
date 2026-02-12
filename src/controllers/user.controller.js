@@ -17,17 +17,24 @@ exports.createUser = async (req, res) => {
     if (!nombreUsuario) {
       return res.status(400).json({ message: 'El nombre de usuario es requerido' });
     }
-    const newCart = await Cart.create({});
-
     const newUser = new User({ 
       username: nombreUsuario,
       email, 
       password: hashedPassword,
-      cart: newCart
+      cart: null
     });
 
     await newUser.save();
-    return res.status(201).json({ message: 'Usuario registrado exitosamente' });
+    const newCart = await Cart.create({ userID: newUser._id.toString() });
+    newUser.cart = newCart._id;
+    await newUser.save();
+
+    const userResponse = newUser.toObject();
+    delete userResponse.password;
+    return res.status(201).json({
+      message: 'Usuario registrado exitosamente',
+      user: userResponse
+    });
   } catch (error) {
     return res.status(500).json({ message: 'Error al registar usuario', error: error.message });
   }
