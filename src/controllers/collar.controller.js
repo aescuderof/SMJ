@@ -1,64 +1,64 @@
-const Collar = require('../models/Collar');
+const Product = require('../models/Product');
 
 
-exports.getAllCollares = async (req, res) => {
+exports.getAllProducts = async (req, res) => {
       try {
-    const collares = await Collar.find({});
-    return res.status(200).json({ collares })
+    const products = await Product.find({});
+    return res.status(200).json({ products })
   } catch (error) {
     return res.status(500).json({
-      message: 'Hubo un error al obtener los collares',
+      message: 'Hubo un error al obtener los productos',
       error: error.message
     })
   }
 }
 
-exports.createCollar = async (req, res) => {
+exports.createProduct = async (req, res) => {
   try {
-    const { nombre, precio, descripcion, imagen } = req.body;
-    const nuevoCollar = await Collar.create({ nombre, precio, descripcion, imagen });
+    const { nombre, precio, descripcion, img, currency, slug } = req.body;
+    const nuevoProduct = await Product.create({ nombre, precio, descripcion, img, currency, slug });
 
-    if (!nuevoCollar) return res.status(400).json({ message: 'No se pudo crear el collar' });
+    if (!nuevoProduct) return res.status(400).json({ message: 'No se pudo crear el producto' });
  
-    return res.status(201).json({datos: nuevoCollar })
+    return res.status(201).json({datos: nuevoProduct })
 
   } catch (error) {
     return res.status(500).json({
-      message: 'Hubo un error al crear el collar',
+      message: 'Hubo un error al crear el producto',
       error: error.message  
     })
   }
 }
   
-exports.updateCollarById = async (req, res) => {
+exports.updateProductById = async (req, res) => {
     try {
             const { nombre, precio, descripcion } = req.body;
-            const collarActualizado = await Collar.findByIdAndUpdate(
+            const collarActualizado = await Product.findByIdAndUpdate(
               req.params.id, { nombre, precio, descripcion }, 
               { new: true, runValidators: true }
             );
         
-            if (!collarActualizado) return res.status(404).json({ message: 'Collar no encontrado' });
+            if (!collarActualizado) return res.status(404).json({ message: 'Producto no encontrado' });
         
             return res.status(200).json({ datos: collarActualizado });
           } catch (error) {
             return res.status(500).json({
-              message: 'Hubo un error al actualizar el collar',
+              message: 'Hubo un error al actualizar el producto',
               error: error.message
             })
           }
 }
 
-exports.deleteCollarById = async (req, res) => {
+exports.deleteProductById = async (req, res) => {
   try {
-    const collarEliminado = await Collar.findByIdAndDelete(req.params.id);
+    const productEliminado = await Product.findByIdAndDelete(req.params.id);
 
-    if (!collarEliminado) return res.status(404).json({ message: 'Collar no encontrado' });
+    if (!productEliminado) return res.status(404).json({ message: 'Producto no encontrado' });
 
-    return res.status(200).json({ message: 'Collar eliminado correctamente' });
+    return res.status(200).json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
     return res.status(500).json({
-      message: 'Hubo un error al eliminar el collar',
+      message: 'Hubo un error al eliminar el producto',
       error: error.message
     })
   }
