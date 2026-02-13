@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 
 exports.getAllProducts = async (req, res) => {
@@ -16,7 +17,31 @@ exports.getAllProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { nombre, precio, descripcion, img, currency, slug } = req.body;
-    const nuevoProduct = await Product.create({ nombre, precio, descripcion, img, currency, slug });
+    const product = await stripe.products.create({
+      name: nombre,
+      description: descripcion,
+      images: [img],
+      metadata: { 
+        productDescription: descripcion,
+         slug: slug }
+    });
+
+    const price = await stripe.prices.create({
+      unit_amount: precio,
+      currency: currency,
+      product: product.id,
+    });
+
+    const nuevoProduct = await Product.create({ 
+      idProd: product.id,
+      priceID: stripePrice.id,
+      nombre,
+       precio,
+        descripcion,
+         img,
+          currency,
+           slug
+    });
 
     if (!nuevoProduct) return res.status(400).json({ message: 'No se pudo crear el producto' });
  
