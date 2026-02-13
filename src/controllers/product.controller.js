@@ -1,5 +1,7 @@
 const Product = require('../models/Product');
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const stripe = process.env.STRIPE_KEY
+  ? require('stripe')(process.env.STRIPE_KEY)
+  : null;
 
 
 exports.getAllProducts = async (req, res) => {
@@ -16,6 +18,12 @@ exports.getAllProducts = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(500).json({
+        message: 'Falta configurar STRIPE_KEY en variables de entorno'
+      });
+    }
+
     const { nombre, precio, descripcion, img, currency, slug } = req.body;
     const product = await stripe.products.create({
       name: nombre,
@@ -34,7 +42,7 @@ exports.createProduct = async (req, res) => {
 
     const nuevoProduct = await Product.create({ 
       idProd: product.id,
-      priceID: stripePrice.id,
+      priceID: price.id,
       nombre,
        precio,
         descripcion,

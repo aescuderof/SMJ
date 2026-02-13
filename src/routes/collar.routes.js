@@ -1,17 +1,17 @@
 const express = require('express');
 
 const {
-  getAllCollares,
-  createCollar,
-  updateCollarById,
-  deleteCollarById
-} = require('../controllers/collar.controller');
+  getAllProducts,
+  createProduct,
+  updateProductById,
+  deleteProductById
+} = require('../controllers/product.controller');
 
 const router = express.Router();
 
-router.get('/', getAllCollares);
-router.post('/', createCollar);
-router.put('/:id', updateCollarById);
-router.delete('/:id', deleteCollarById);
+router.get('/', getAllProducts);
+router.post('/', createProduct);
+router.put('/:id', updateProductById);
+router.delete('/:id', deleteProductById);
 
 module.exports = router;
