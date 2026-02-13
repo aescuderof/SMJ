@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const collarSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
     idProd: {
         type: String,
         required: true,
@@ -40,6 +40,6 @@ const collarSchema = new mongoose.Schema({
 
 );
 
-const Collar = mongoose.model('Collar', collarSchema);
+const Product = mongoose.model('Product', productSchema);
 
-module.exports = Collar;
+module.exports = Product;
