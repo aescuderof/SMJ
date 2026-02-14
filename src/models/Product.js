@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const collarSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
     idProd: {
         type: String,
         required: true,
@@ -10,12 +10,10 @@ const collarSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
     currency: {
         type: String,
-        required: true,
+        required: true
     },
-
     nombre: {
         type: String,
         required: true
@@ -28,21 +26,20 @@ const collarSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imagen: {
+    img: {
         type: String,
         required: true
-    },
+    }, 
     slug: {
         type: String,
         required: true,
         unique: true
     }
-
 },
 { timestamps: true }
 
 );
 
-const Collar = mongoose.model('Collar', collarSchema);
+const Product = mongoose.model('Product', productSchema);
 
-module.exports = Collar;
+module.exports = Product;

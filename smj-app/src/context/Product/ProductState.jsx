@@ -1,6 +1,6 @@
-import ProductContext from './ProductContext';
-import ProductReducer from './ProductReducer';
-import { useReducer } from 'react';
+import { useReducer } from "react";
+import ProductContext from "./ProductContext";
+import ProductReducer from "./ProductReducer";
 
 const ProductState = (props) => {
  const initialState = {
@@ -16,11 +16,25 @@ const ProductState = (props) => {
 
 }
 
-const [globalState, dispatch] = useReducer(ProductReducer, initialState);
+const [globalState, dispatch] = useReducer(ProductReducer, initialState);   
+
+const getProducts = async () => {
+    try {
+        const response = await axiosClient.get('/products');
+        console.log(response.data);
+
+        dispatch({
+            type: 'OBTENER_PRODUCTOS',
+            payload: response.data.products
+        })
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+};
 
 return (
     <ProductContext.Provider value={{ 
-        products: globalState.products }}>
+        products: globalState.products,}}>
         {props.children}
     </ProductContext.Provider>
 )
