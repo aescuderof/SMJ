@@ -1,18 +1,11 @@
 import { useReducer } from "react";
 import ProductContext from "./ProductContext";
 import ProductReducer from "./ProductReducer";
+import axiosClient from "../../config/axiosClient";
 
 const ProductState = (props) => {
  const initialState = {
-        products: [
-            {
-                id: 1,
-                name: 'Product de prueba 1',
-                description: 'Description del producto',
-                price: 10.99,
-                image: 'https://via.placeholder.com/150'
-            },
-        ]
+        products: []
 
 }
 
@@ -34,7 +27,8 @@ const getProducts = async () => {
 
 return (
     <ProductContext.Provider value={{ 
-        products: globalState.products,}}>
+        products: globalState.products,
+        getProducts}}>
         {props.children}
     </ProductContext.Provider>
 )

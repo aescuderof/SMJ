@@ -3,15 +3,13 @@ import ProductContext from "./ProductContext";
 
 const ProductReducer = (globalState, action) => {
     switch (action.type) {
-        case 'ACTUALIZAR_PRODUCTOS':
-           break;
+        case 'OBTENER_PRODUCTOS':
+            return {
+                ...globalState,
+                products: action.payload
+            };
 
-           case 'AGREGAR_PRODUCTO':
-            break;
-
-            case 'ELIMINAR_PRODUCTO':
-
-            break;
+       
 
         default:
             return globalState;

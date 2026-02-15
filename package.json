@@ -2351,7 +2351,6 @@
       "integrity": "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==",
       "license": "MIT",
       "peer": true
-    
     },
     "node_modules/semver": {
       "version": "7.7.4",
@@ -2829,5 +2828,14 @@
       "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==",
       "license": "ISC"
     }
+  },
+  "scripts": {
+    "dev": "npm -C smj-app run dev"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.18"
   }
 }
