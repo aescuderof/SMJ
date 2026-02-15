@@ -4,8 +4,8 @@ const Header = () => {
         <header className="bg-green-800">
             <nav className="flex justify-between items-center mx-8 py-4">
                 <ul className="flex items-center space-x-4">
-                    <li className="hidden ml-10" text-neutral-50 md:block>
-                    <Link to="/products" className="font-medium">Menu</Link>
+                    <li className="hidden ml-10 text-neutral-50 md:block">
+                        <Link to="/products" className="font-medium">Menu</Link>
                     </li>
                 </ul>
 

@@ -14,11 +14,15 @@ const app = express();
 connectDB();
 
 const whiteList = [
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175'
 ];
 
 const corsOptions = {
   origin: function(origin, callback) {
+    // Permitir peticiones sin origin (como Thunder Client, Postman, etc.)
     if (!origin) return callback(null, true);
 
     if(whiteList.includes(origin)) {

@@ -13,8 +13,12 @@ const [globalState, dispatch] = useReducer(ProductReducer, initialState);
 
 const getProducts = async () => {
     try {
+        console.log('axiosClient baseURL:', axiosClient.defaults.baseURL);
+        console.log('Haciendo petición GET a /products');
         const response = await axiosClient.get('/products');
-        console.log(response.data);
+        console.log('Respuesta completa:', response);
+        console.log('Datos recibidos:', response.data);
+        console.log('Productos:', response.data.products);
 
         dispatch({
             type: 'OBTENER_PRODUCTOS',
@@ -22,6 +26,7 @@ const getProducts = async () => {
         })
     } catch (error) {
         console.error('Error fetching products:', error);
+        console.error('Error completo:', error.response);
     }
 };
 
