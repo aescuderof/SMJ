@@ -1,8 +1,12 @@
 const Footer = () => {
     return (
-        <div className="footer">
-            <p>Copyright © 2024 SMJ. All rights reserved.</p>
-        </div>
+        <Footer className="text-gray-600 text-xs max-w-5xl mx-auto text-center px-4 pt-24 pb-8">
+             
+            <p>Copyright © 2026 Señorita María Joyas. 
+                Todos los derechos reservados.</p>
+      
+        </Footer>
+       
     );
 };
 

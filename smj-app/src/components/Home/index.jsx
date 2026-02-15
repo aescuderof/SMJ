@@ -14,7 +14,6 @@ const Home = () => {
                         <p className="text-gray-700">Nuestros collares</p>
                     </Link>
                 </article>
-                Ver el menu
             </section>
             </main>
            
