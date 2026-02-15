@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "./components/Layout"
 import Home from "./components/Home"
+import UserState from "./context/User/UserState"
 import Register from "./components/Auth/Register"
 import Login from "./components/Auth/Login"
 import ProductState from "./context/Product/ProductState"
@@ -9,6 +10,8 @@ import SingleProduct from "./components/Product/Single"
 
 const Router = () => {
     return (
+        <UserState>
+
         <ProductState>
         <BrowserRouter>
             <Routes>
@@ -22,6 +25,7 @@ const Router = () => {
             </Routes>
         </BrowserRouter>
         </ProductState> 
+        </UserState>
     )
 }
 
