@@ -20,12 +20,14 @@ const ProductList = () => {
           </p>
         ) : (
           products.map((product) => {
+            const productImage = product.images?.[0] || product.img;
+
             return (
               <div key={product._id} className="border flex flex-col">
                 <div className="bg-gray-200">
                   <Link to={`/products/${product.slug}`} state={{ product }}>
                     <img
-                      src={product.img}
+                      src={productImage}
                       alt={product.descripcion}
                       className="w-full h-96 object-center object-cover"
                     />

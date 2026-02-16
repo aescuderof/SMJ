@@ -24,11 +24,25 @@ exports.createProduct = async (req, res) => {
       });
     }
 
-    const { nombre, precio, descripcion, img, currency, slug } = req.body;
+    const { nombre, precio, descripcion, img, images, currency, slug } = req.body;
+    const normalizedImages = Array.isArray(images)
+      ? images
+          .filter((url) => typeof url === 'string' && url.trim() !== '')
+          .map((url) => url.trim())
+      : typeof img === 'string' && img.trim() !== ''
+      ? [img.trim()]
+      : [];
+
+    if (normalizedImages.length === 0) {
+      return res.status(400).json({
+        message: 'Debes enviar al menos una imagen en "images" o "img"'
+      });
+    }
+
     const product = await stripe.products.create({
       name: nombre,
       description: descripcion,
-      images: [img],
+      images: normalizedImages,
       metadata: { 
         productDescription: descripcion,
          slug: slug }
@@ -46,7 +60,8 @@ exports.createProduct = async (req, res) => {
       nombre,
        precio,
         descripcion,
-         img,
+         images: normalizedImages,
+         img: normalizedImages[0],
           currency,
            slug
     });

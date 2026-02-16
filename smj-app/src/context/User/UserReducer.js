@@ -4,3 +4,5 @@ const UserReducer = (globaState, action) => {
 	  return globaState;
   }
 };
+
+export default UserReducer;
