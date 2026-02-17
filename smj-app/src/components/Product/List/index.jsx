@@ -28,7 +28,7 @@ const ProductList = () => {
           {/* Image */}
           <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
             <Link to={`/products/${product.slug}`} state={{ product }}>
-              <div className="aspect-4/3 w-full bg-gray-100">
+              <div className="aspect-4/3 w-full bg-dust-grey-50">
                 <img
                   src={productImage}
                   alt={product.descripcion}
@@ -40,7 +40,7 @@ const ProductList = () => {
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/35 to-transparent" />
 
               {/* Price */}
-              <div className="absolute bottom-3 right-3 rounded-xl bg-black/55 px-3 py-2 text-sm font-semibold text-white backdrop-blur">
+              <div className="absolute bottom-3 right-3 rounded-xl bg-dust-grey-800/55 px-3 py-2 text-sm font-semibold text-white backdrop-blur">
                 ${product.precio}
               </div>
             </Link>
@@ -48,10 +48,10 @@ const ProductList = () => {
 
           {/* Info */}
           <div className="mt-4">
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-dust-grey-800">
               {product.nombre}
             </p>
-            <p className="text-sm text-gray-500 line-clamp-2">
+            <p className="text-sm text-dust-grey-400 line-clamp-2">
               {product.descripcion}
             </p>
           </div>
@@ -62,7 +62,7 @@ const ProductList = () => {
             state={{ product }}
             className="mt-4"
           >
-            <button className="w-full rounded-xl bg-gray-100 px-4 py-3 text-sm font-medium text-gray-900 transition hover:bg-gray-200">
+            <button className="w-full btn-product">
               Ver collar
             </button>
           </Link>
