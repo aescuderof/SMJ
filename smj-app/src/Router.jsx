@@ -8,12 +8,14 @@ import ProductState from "./context/Product/ProductState"
 import ProductList from "./components/Product/List"
 import SingleProduct from "./components/Product/Single"
 import Contact from "./components/Contact"
+import CartState from "./context/Cart/CartState"
 
 const Router = () => {
     return (
         <UserState>
 
         <ProductState>
+        <CartState>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
@@ -26,6 +28,7 @@ const Router = () => {
                 </Route>
             </Routes>
         </BrowserRouter>
+        </CartState>
         </ProductState> 
         </UserState>
     )

@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import CartContext from "../../../context/Cart/CartContext";
+import ProductContext from "../../../context/Product/ProductContext";
 
 function StarRow({ value = 4 }) {
   const stars = useMemo(() => Array.from({ length: 5 }, (_, i) => i < value), [value]);
@@ -51,14 +53,26 @@ function AccordionItem({ title, children, defaultOpen = false }) {
 
 const SingleProduct = () => {
   const location = useLocation();
-  const { product } = location.state || {};
+  const { slug } = useParams();
+  const { product: stateProduct } = location.state || {};
+  const { products, getProducts } = useContext(ProductContext);
   const [activeIndex, setActiveIndex] = useState(0);
+  const { addToCart } = useContext(CartContext);
+  const product = stateProduct || products.find((item) => item.slug === slug);
+
+  useEffect(() => {
+    if (!stateProduct && products.length === 0) {
+      getProducts();
+    }
+  }, [stateProduct, products.length, getProducts]);
 
   if (!product) {
+    const statusMessage = products.length === 0 ? "Cargando producto..." : "Producto no encontrado";
+
     return (
       <main>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <p className="text-center text-dust-grey-500">Producto no encontrado</p>
+          <p className="text-center text-dust-grey-500">{statusMessage}</p>
           <Link to="/products" className="mt-4 block text-center text-dust-grey-700 hover:underline">
             Volver a productos
           </Link>
@@ -147,12 +161,7 @@ const SingleProduct = () => {
                 type="button"
                 className="w-full rounded-xl bg-dust-grey-700 px-8 py-3 text-base font-semibold text-dust-grey-50 shadow-sm transition hover:bg-dust-grey-800 focus:outline-none focus:ring-2 focus:ring-dust-grey-500/40"
                 onClick={() => {
-                  // Hook here your cart/stripe logic
-                  console.log("Add to bag:", {
-                    idProd: product.idProd,
-                    priceID: product.priceID,
-                    slug: product.slug,
-                  });
+                  addToCart(product, 1);
                 }}
               >
                 Añadir al carrito
