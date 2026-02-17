@@ -9,7 +9,7 @@ function StarRow({ value = 4 }) {
         <svg
           key={idx}
           viewBox="0 0 20 20"
-          className={`h-4 w-4 ${filled ? "text-indigo-600" : "text-gray-300"}`}
+          className={`h-4 w-4 ${filled ? "text-dust-grey-700" : "text-dust-grey-300"}`}
           fill="currentColor"
           aria-hidden="true"
         >
@@ -24,14 +24,14 @@ function AccordionItem({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-t border-gray-200">
+    <div className="border-t border-dust-grey-200">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between py-4 text-left"
       >
-        <span className="text-sm font-medium text-gray-900">{title}</span>
-        <span className="text-gray-400">
+        <span className="text-sm font-medium text-dust-grey-900">{title}</span>
+        <span className="text-dust-grey-400">
           {open ? (
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path d="M4 10a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z" />
@@ -44,7 +44,7 @@ function AccordionItem({ title, children, defaultOpen = false }) {
         </span>
       </button>
 
-      {open ? <div className="pb-6 text-sm text-gray-600">{children}</div> : null}
+      {open ? <div className="pb-6 text-sm text-dust-grey-600">{children}</div> : null}
     </div>
   );
 }
@@ -58,8 +58,8 @@ const SingleProduct = () => {
     return (
       <main>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <p className="text-center text-gray-500">Producto no encontrado</p>
-          <Link to="/products" className="mt-4 block text-center text-indigo-600 hover:underline">
+          <p className="text-center text-dust-grey-500">Producto no encontrado</p>
+          <Link to="/products" className="mt-4 block text-center text-dust-grey-700 hover:underline">
             Volver a productos
           </Link>
         </div>
@@ -71,25 +71,25 @@ const SingleProduct = () => {
   const activeImage = images[activeIndex] ?? images[0];
 
   return (
-    <main className="bg-white">
+    <main className="bg-dust-grey-50">
       <div className="mx-auto max-w-6xl px-4 py-10">
         {/* Optional breadcrumb (simple + dynamic) */}
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link to="/products" className="font-medium text-gray-900 hover:text-gray-700">
-                Products
+              <Link to="/products" className="font-medium text-dust-grey-900 hover:text-dust-grey-700">
+              Tienda
               </Link>
             </li>
-            <li className="text-gray-300">/</li>
-            <li className="font-medium text-gray-500">{product.nombre}</li>
+            <li className="text-dust-grey-300">/</li>
+            <li className="font-medium text-dust-grey-500">{product.nombre}</li>
           </ol>
         </nav>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* LEFT: main image + thumbnails */}
           <div>
-            <div className="overflow-hidden rounded-2xl bg-gray-50 ring-1 ring-black/5">
+            <div className="overflow-hidden rounded-2xl bg-dust-grey-100 ring-1 ring-dust-grey-200">
               <div className="aspect-square w-full">
                 <img
                   src={activeImage}
@@ -110,11 +110,11 @@ const SingleProduct = () => {
                     onClick={() => setActiveIndex(idx)}
                     className={[
                       "overflow-hidden rounded-xl ring-1 transition",
-                      active ? "ring-indigo-600" : "ring-black/10 hover:ring-black/20",
+                      active ? "ring-dust-grey-700" : "ring-dust-grey-200 hover:ring-dust-grey-300",
                     ].join(" ")}
                     aria-label={`Ver imagen ${idx + 1}`}
                   >
-                    <div className="aspect-square bg-gray-50">
+                    <div className="aspect-square bg-dust-grey-100">
                       <img src={src} alt="" className="h-full w-full object-contain" />
                     </div>
                   </button>
@@ -125,37 +125,27 @@ const SingleProduct = () => {
 
           {/* RIGHT: title, price, rating, description, CTA */}
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-dust-grey-900 sm:text-3xl">
               {product.nombre}
             </h1>
 
-            <p className="mt-3 text-3xl tracking-tight text-gray-900">
+            <p className="mt-3 text-3xl tracking-tight text-dust-grey-900">
               {product.currency ? `${product.currency} ` : "$"}
               {product.precio}
             </p>
 
-            <div className="mt-4 flex items-center gap-3">
-              <StarRow value={4} />
-              <span className="text-sm text-gray-500">(rating demo)</span>
-            </div>
+            
 
-            <p className="mt-6 text-sm leading-6 text-gray-600">{product.descripcion}</p>
+            <p className="mt-6 text-sm leading-6 text-dust-grey-600">{product.descripcion}</p>
 
-            {/* Color selection (demo UI, no backend fields needed) */}
-            <div className="mt-8">
-              <h3 className="text-sm font-medium text-gray-900">Color</h3>
-              <div className="mt-4 flex items-center gap-x-3">
-                <span className="h-8 w-8 rounded-full bg-gray-900 ring-2 ring-indigo-600 ring-offset-2" />
-                <span className="h-8 w-8 rounded-full bg-white ring-1 ring-black/10" />
-                <span className="h-8 w-8 rounded-full bg-gray-400 ring-1 ring-black/10" />
-              </div>
-            </div>
+            
+           
 
             {/* CTA row */}
             <div className="mt-10 flex items-center gap-4">
               <button
                 type="button"
-                className="w-full rounded-xl bg-indigo-600 px-8 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+                className="w-full rounded-xl bg-dust-grey-700 px-8 py-3 text-base font-semibold text-dust-grey-50 shadow-sm transition hover:bg-dust-grey-800 focus:outline-none focus:ring-2 focus:ring-dust-grey-500/40"
                 onClick={() => {
                   // Hook here your cart/stripe logic
                   console.log("Add to bag:", {
@@ -170,13 +160,13 @@ const SingleProduct = () => {
 
               <button
                 type="button"
-                className="grid h-12 w-12 place-items-center rounded-xl ring-1 ring-black/10 transition hover:bg-gray-50"
+                className="grid h-12 w-12 place-items-center rounded-xl ring-1 ring-dust-grey-300 transition hover:bg-dust-grey-100"
                 aria-label="Favorite"
                 title="Favorite"
               >
                 <svg
                   viewBox="0 0 24 24"
-                  className="h-5 w-5 text-gray-500"
+                  className="h-5 w-5 text-dust-grey-500"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"

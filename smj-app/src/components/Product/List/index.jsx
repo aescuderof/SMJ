@@ -16,7 +16,7 @@ const ProductList = () => {
 
     <section className="px-4 sm:px-6 lg:px-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
   {products.length === 0 ? (
-    <p className="col-span-full text-center text-gray-500">
+    <p className="col-span-full text-center text-dust-grey-500">
       No hay productos disponibles.
     </p>
   ) : (
@@ -26,7 +26,7 @@ const ProductList = () => {
       return (
         <div key={product._id} className="group flex flex-col">
           {/* Image */}
-          <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+          <div className="relative overflow-hidden rounded-2xl bg-dust-grey-50 shadow-sm ring-1 ring-dust-grey-200">
             <Link to={`/products/${product.slug}`} state={{ product }}>
               <div className="aspect-4/3 w-full bg-dust-grey-50">
                 <img
