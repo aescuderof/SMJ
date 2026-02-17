@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "./components/Layout"
 import Home from "./components/Home"
 import UserState from "./context/User/UserState"
@@ -13,7 +13,7 @@ const Router = () => {
         <UserState>
 
         <ProductState>
-        <HashRouter>
+        <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
@@ -23,7 +23,7 @@ const Router = () => {
                     <Route path="products/:slug" element={<SingleProduct />} />
                 </Route>
             </Routes>
-        </HashRouter>
+        </BrowserRouter>
         </ProductState> 
         </UserState>
     )
