@@ -7,6 +7,7 @@ import Login from "./components/Auth/Login"
 import ProductState from "./context/Product/ProductState"
 import ProductList from "./components/Product/List"
 import SingleProduct from "./components/Product/Single"
+import Contact from "./components/Contact"
 
 const Router = () => {
     return (
@@ -19,6 +20,7 @@ const Router = () => {
                     <Route index element={<Home />} />
                     <Route path="registro" element={<Register />} />
                     <Route path="login" element={<Login />} />
+                    <Route path="contacto" element={<Contact />} />
                     <Route path="products" element={<ProductList />} />
                     <Route path="products/:slug" element={<SingleProduct />} />
                 </Route>

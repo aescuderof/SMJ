@@ -167,7 +167,7 @@ const SingleProduct = () => {
                 <ul className="list-disc space-y-2 pl-5">
                   <li>Piedras naturales</li>
                   <li>Broches & cierres de bronce bañado en oro o plata</li>
-                  <li><Hechos></Hechos> a mano</li>
+                  <li>Hechos a mano</li>
                 </ul>
               </AccordionItem>
 

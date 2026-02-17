@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 
 const userRouter = require('./routes/user.routes');
 const productRouter = require('./routes/product.routes');
+const contactRouter = require('./routes/contact.routes');
 
 const PORT = process.env.PORT || 5000;
 
@@ -51,6 +52,8 @@ app.get('/', (req, res) => {
 app.use('/users', userRouter);
 
 app.use('/products', productRouter);
+
+app.use('/contact', contactRouter);
 
 app.get('/users', async (req, res) => {
   try {

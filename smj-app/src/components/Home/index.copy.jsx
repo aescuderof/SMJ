@@ -1,81 +1,83 @@
-import React from "react";
+import React from 'react';
+// Si usas Lucide React para los iconos, si no puedes usar SVGs simples
+import { Facebook, Instagram, Twitter, Github, Youtube } from 'lucide-react';
 
-const products = [
-  {
-    id: 1,
-    name: "Leather Long Wallet",
-    variant: "Natural",
-    price: 75,
-    image: "https://via.placeholder.com/600x600",
-  },
-  {
-    id: 2,
-    name: "Machined Pencil and Pen Set",
-    variant: "Black",
-    price: 70,
-    image: "https://via.placeholder.com/600x600",
-  },
-  {
-    id: 3,
-    name: "Mini-Sketchbooks",
-    variant: "Light Brown",
-    price: 27,
-    image: "https://via.placeholder.com/600x600",
-  },
-  {
-    id: 4,
-    name: "Organizer Set",
-    variant: "Walnut",
-    price: 149,
-    image: "https://via.placeholder.com/600x600",
-  },
-];
+const Footer = () => {
+  const sections = [
+    {
+      title: 'Solutions',
+      links: ['Marketing', 'Analytics', 'Automation', 'Commerce', 'Insights'],
+    },
+    {
+      title: 'Support',
+      links: ['Submit ticket', 'Documentation', 'Guides'],
+    },
+    {
+      title: 'Company',
+      links: ['About', 'Blog', 'Jobs', 'Press'],
+    },
+    {
+      title: 'Legal',
+      links: ['Terms of service', 'Privacy policy', 'License'],
+    },
+  ];
 
-export default function NewArrivals() {
   return (
-    <section className="bg-gray-50 py-16">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-semibold text-gray-900">
-            Nuevos ingresos
-          </h2>
-
-          <a
-            href="#"
-            className="text-indigo-600 font-medium hover:text-indigo-800 transition"
-          >
-            Ir a la tienda →
-          </a>
-        </div>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product) => (
-            <div key={product.id} className="group">
-              {/* Image container */}
-              <div className="bg-gray-200 rounded-xl overflow-hidden aspect-square mb-4">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                />
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+        
+        {/* Sección Superior: Grid principal */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+          
+          {/* Logo y Eslogan (Toma 2 columnas en móvil, 1 en desktop amplio) */}
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              {/* Reemplaza con tu logo SVG real */}
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold">~</span>
               </div>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-xs">
+              Making the world a better place through constructing elegant hierarchies.
+            </p>
+            {/* Redes Sociales */}
+            <div className="flex gap-5 text-gray-500 dark:text-gray-400 mt-2">
+              <Facebook className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+              <Instagram className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+              <Twitter className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+              <Github className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+              <Youtube className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+            </div>
+          </div>
 
-              {/* Info */}
-              <h3 className="text-base font-medium text-gray-900">
-                {product.name}
+          {/* Enlaces Dinámicos */}
+          {sections.map((section) => (
+            <div key={section.title}>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+                {section.title}
               </h3>
-
-              <p className="text-gray-500">{product.variant}</p>
-
-              <p className="mt-2 text-gray-900 font-semibold">
-                ${product.price}
-              </p>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link}>
+                    <a href="#" className="text-gray-600 dark:text-gray-400 text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
+
+        {/* Separador y Copyright */}
+        <div className="border-t border-gray-200 dark:border-gray-800 pt-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            © {new Date().getFullYear()} Your Company, Inc. All rights reserved.
+          </p>
+        </div>
       </div>
-    </section>
+    </footer>
   );
-}
+};
+
+export default Footer;

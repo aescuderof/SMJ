@@ -22,6 +22,9 @@ const Header = () => {
                         <Link to="/products" className="text-sm font-medium text-dust-grey-800 transition hover:text-dust-grey-600">
                             Tienda
                         </Link>
+                  <Link to="/contacto" className="text-sm font-medium text-dust-grey-800 transition hover:text-dust-grey-600">
+                    Contacto
+                  </Link>
           </div>
         </div>
 
