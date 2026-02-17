@@ -53,7 +53,7 @@ const Contact = () => {
   };
 
   return (
-    <main className="relative isolate bg-dust-grey-50 px-6 py-16 sm:py-20 lg:px-8">
+    <main className="relative isolate bg-dust-grey-50 px-6 pb-5 pt-2 sm:pb-5 sm:pt-3 lg:px-8">
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -68,8 +68,8 @@ const Contact = () => {
       </div>
 
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className="text-4xl font-semibold tracking-tight text-dust-grey-900 sm:text-5xl">Contacto</h1>
-        <p className="mt-3 text-lg text-dust-grey-600">
+        <h1 className="text-4xl font-semibold tracking-tight text-dust-grey-700 sm:text-5xl">Contacto</h1>
+        <p className="mt-3 text-lg text-dust-grey-800">
           ¿Tienes dudas sobre tallas, materiales o pedidos personalizados? Estamos para ayudarte.
         </p>
       </div>
@@ -90,7 +90,7 @@ const Contact = () => {
         
       </div>
 
-      <form onSubmit={handleSubmit} className="mx-auto mt-12 max-w-2xl rounded-2xl bg-white p-6 ring-1 ring-dust-grey-200 sm:p-8">
+      <form onSubmit={handleSubmit} className="mx-auto mt-5 max-w-2xl p-6 sm:p-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label htmlFor="nombre" className="block text-sm font-semibold text-dust-grey-900">
