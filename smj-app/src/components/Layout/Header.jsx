@@ -11,13 +11,13 @@ const Header = () => {
           </Link>
           {/* Menu Desktop */}
           <div className="hidden md:flex gap-6 text-sm font-regular text-gray-600">
-                <Link to="/" className="text-lg font-regular text-dust-grey-700 transition hover:text-dust-grey-600">
+                <Link to="/" className="text-lg font-light text-dust-grey-700 transition hover:text-dust-grey-500">
                             Inicio
                         </Link>
-                        <Link to="/products" className="text-lg font-regular text-dust-grey-700 transition hover:text-dust-grey-600">
+                        <Link to="/products" className="text-lg font-light text-dust-grey-700 transition hover:text-dust-grey-500">
                             Tienda
                         </Link>
-                  <Link to="/contacto" className="text-lg font-regular text-dust-grey-700 transition hover:text-dust-grey-600">
+                  <Link to="/contacto" className="text-lg font-light text-dust-grey-700 transition hover:text-dust-grey-500">
                     Contacto
                   </Link>
           </div>
