@@ -56,7 +56,7 @@ const Contact = () => {
     <main className="relative isolate bg-dust-grey-50 px-6 pb-5 pt-2 sm:pb-5 sm:pt-3 lg:px-8">
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       >
         <div
           style={{
