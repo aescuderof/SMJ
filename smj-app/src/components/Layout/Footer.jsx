@@ -23,7 +23,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+    <footer className="bg-white dark:bg-dust-grey-800 border-gray-200 dark:border-dust-grey-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         
         {/* Sección Superior: Grid principal */}
@@ -37,12 +37,12 @@ const Footer = () => {
                 <span className="text-white font-bold">~</span>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-xs">
+            <p className="text-dust-grey-700 dark:text-dust-grey-200 text-sm leading-relaxed max-w-xs">
               Accesorios hechos a mano con piedras naturales y mostacillas miyuki para acompañarte todos los días.
             </p>
             {/* Redes Sociales */}
            <div className="flex gap-5 text-gray-500 dark:text-gray-400 mt-2">
-              <Facebook className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
+              <Facebook className="w-5 h-5 cursor-pointer hover:text-dust-grey-400 transition-colors" />
               <Instagram className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
               <Twitter className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />
               <Github className="w-5 h-5 cursor-pointer hover:text-indigo-600 transition-colors" />

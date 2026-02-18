@@ -1,14 +1,24 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import ProductContext from "./ProductContext";
 import ProductReducer from "./ProductReducer";
 import axiosClient from "../../config/axiosClient";
 import mockProducts from "../../data/mockProducts";
+import { ShelvingUnit } from "lucide-react";
 
 const ProductState = (props) => {
  const initialState = {
-        products: []
+        products: [],
+        currentProduct: {
+            _id: null,
+            nombre: '',
+            descripcion: '',
+            precio: '',
+            images: [],
+            slug: '',
+        }
+        }
 
-}
+
 
 const [globalState, dispatch] = useReducer(ProductReducer, initialState);  
 
@@ -48,13 +58,12 @@ const getProducts = useCallback(async () => {
     }
 }, [useMockProducts]);
 
-const providerValue = useMemo(() => ({
-    products: globalState.products,
-    getProducts
-}), [globalState.products, getProducts]);
-
 return (
-    <ProductContext.Provider value={providerValue}>
+    <ProductContext.Provider value={{
+        products: globalState.products,
+        currentProduct: globalState.currentProduct,
+        getProducts
+        }}>
         {props.children}
     </ProductContext.Provider>
 )

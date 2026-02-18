@@ -14,7 +14,9 @@ const UserState = (props) => {
         },
 
         cart: [],
-        authState: false
+        authState: false,
+        sessionURL: null,
+        globalLoading: false,
     };
 
     const [globalState, dispatch] = useReducer(UserReducer, initialState);
@@ -56,9 +58,43 @@ const UserState = (props) => {
         }
     }
 
-    const logout = () => {
+    const verifyUser = async () => {
+        const token = localStorage.getItem('token');
+        if (token)  {
+           axiosClient.defaults.headers.common['authorization'] = token
+        } else {
+            delete axiosClient.defaults.headers.common['authorization'];
+        } 
+        try {
+            const response = await axiosClient.get('/users/verify');
+
+            dispatch({
+                type: 'OBETENER_USUARIO',
+                payload: response.data.user
+            })
+         }
+        catch (error) {
+           return;
+        }   
+
+    }
+
+    const updateUser = async (form) => {
+        const token = localStorage.getItem('token');
+        
+        if (token)  {
+           axiosClient.defaults.headers.common['authorization'] = token
+        }
+        else {
+            delete axiosClient.defaults.headers.common['authorization'];
+        }
+        await axiosClient.put('/users/update', form);
+    }
+
+    const logout = async () => {
+        
         dispatch({
-            type: 'LOGOUT'
+            type: 'CERRAR_SESION',
         })
     }
 
@@ -67,8 +103,12 @@ const UserState = (props) => {
             currentUser: globalState.currentUser,
             cart: globalState.cart,
             authState: globalState.authState,
+            globalLoading: globalState.globalLoading,
+            sessionURL: globalState.sessionURL,
             registerUser,
             loginUser,
+            verifyUser,
+            updateUser,
             logout
         }}>
             {props.children}

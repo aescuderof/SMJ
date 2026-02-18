@@ -181,12 +181,11 @@ const SingleProduct = () => {
               </AccordionItem>
 
               <AccordionItem title="Cuidados">
-                
                 <ul className="list-disc space-y-2 pl-5">
-                  <li>​Evita el agua, quítatelo antes de nadar, ducharte o hacer deporte.</li>
-                  <li>​Guárdalos lejos de la luz solar, la exposición prolongada al sol puede desteñirlas.</li>
-                  <li>​No apliques perfumes o productos de cuidado personal sobre tus accesorios.</li>
-                  <li><span className="font-bold">​Tip extra: </span>Si estás pensando en limpiar tus joyas o accesorios, recuerda usar siempre un paño seco y suave para no rayar el material.</li>
+                  <li>Evita el agua, quítatelo antes de nadar, ducharte o hacer deporte.</li>
+                  <li>Guárdalos lejos de la luz solar, la exposición prolongada al sol puede desteñirlas.</li>
+                  <li>No apliques perfumes o productos de cuidado personal sobre tus accesorios.</li>
+                  <li><span className="font-bold">Tip extra: </span>Si estás pensando en limpiar tus joyas o accesorios, recuerda usar siempre un paño seco y suave para no rayar el material.</li>
                 </ul>
               </AccordionItem>
 
