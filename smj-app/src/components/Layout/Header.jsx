@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import CartContext from '../../context/Cart/CartContext';
+import UserContext from '../../context/User/UserContext';
 import CartDrawer from '../Cart/CartDrawer';
 
 const Header = () => {
   const { itemCount, openCart } = useContext(CartContext);
+  const { authStatus, currentUser } = useContext(UserContext);
+
+  const displayName = currentUser?.username || currentUser?.email;
 
     return (
     <header className="relative z-50 bg-dust-grey-50">
@@ -29,6 +33,9 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-6 text-sm font-medium">
+          {authStatus && displayName ? (
+            <span className="text-sm text-dust-grey-700">Bienvenido, {displayName}</span>
+          ) : null}
           <Link to="/registro" className="btn-nav-secundario">
             Crear cuenta
           </Link>

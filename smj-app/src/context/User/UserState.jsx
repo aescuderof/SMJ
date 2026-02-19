@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import UserContext from './UserContext';
 import UserReducer from './UserReducer';
 import axiosClient from '../../config/axiosClient';
@@ -14,7 +14,7 @@ const UserState = (props) => {
         },
 
         cart: [],
-        authState: false,
+        authStatus: false,
         sessionURL: null,
         globalLoading: false,
     };
@@ -44,6 +44,7 @@ const UserState = (props) => {
             const token = response.data.token;
 
             localStorage.setItem('token', token);
+            axiosClient.defaults.headers.common['authorization'] = `Bearer ${token}`;
 
             console.log('Respuesta del login:', response);
             
@@ -62,10 +63,12 @@ const UserState = (props) => {
     const verifyUser = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
+            delete axiosClient.defaults.headers.common['authorization'];
+            dispatch({ type: 'CERRAR_SESION' });
             return;
         }
         
-        axiosClient.defaults.headers.common['authorization'] = token;
+        axiosClient.defaults.headers.common['authorization'] = `Bearer ${token}`;
         
         try {
             const response = await axiosClient.get('/users/verify-user');
@@ -94,17 +97,23 @@ const UserState = (props) => {
     }
 
     const logout = async () => {
+        localStorage.removeItem('token');
+        delete axiosClient.defaults.headers.common['authorization'];
         
         dispatch({
             type: 'CERRAR_SESION',
         })
     }
 
+    useEffect(() => {
+        verifyUser();
+    }, []);
+
     return (
         <UserContext.Provider value={{
             currentUser: globalState.currentUser,
             cart: globalState.cart,
-            authState: globalState.authState,
+            authStatus: globalState.authStatus,
             globalLoading: globalState.globalLoading,
             sessionURL: globalState.sessionURL,
             registerUser,

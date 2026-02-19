@@ -1,9 +1,11 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/User/UserContext";
 
 export default function Login() {
   const ctx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const { loginUser } = ctx;
 
@@ -28,8 +30,13 @@ export default function Login() {
 
     const res = await loginUser(logUser);
 
-    if (res) setErrorMsg(res);
-    return;
+    if (res === true) {
+      setErrorMsg("");
+      navigate("/");
+      return;
+    }
+
+    setErrorMsg(res);
   };
 
   return (
