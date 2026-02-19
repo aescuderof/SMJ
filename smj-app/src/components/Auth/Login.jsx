@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../../contexts/User/UserContext";
+import UserContext from "../../context/User/UserContext";
 
 export default function Login() {
   const ctx = useContext(UserContext);

@@ -34,7 +34,7 @@ const UserState = (props) => {
         }
         catch (error) {
             console.error(error);
-            return error.response.data.msg;
+            return error.response?.data?.message || 'Error al registrar';
         }
     }
 
@@ -43,6 +43,7 @@ const UserState = (props) => {
             const response = await axiosClient.post('/users/login', form);
             const token = response.data.token;
 
+            localStorage.setItem('token', token);
 
             console.log('Respuesta del login:', response);
             
@@ -50,23 +51,24 @@ const UserState = (props) => {
                 type: 'LOGIN_EXITOSO',
                 payload: token
             })
-            return;
+            return true;
         }
         catch (error) { 
             console.error(error);
-            return error.response.data.msg;
+            return error.response?.data?.message || 'Error al iniciar sesión';
         }
     }
 
     const verifyUser = async () => {
         const token = localStorage.getItem('token');
-        if (token)  {
-           axiosClient.defaults.headers.common['authorization'] = token
-        } else {
-            delete axiosClient.defaults.headers.common['authorization'];
-        } 
+        if (!token) {
+            return;
+        }
+        
+        axiosClient.defaults.headers.common['authorization'] = token;
+        
         try {
-            const response = await axiosClient.get('/users/verify');
+            const response = await axiosClient.get('/users/verify-user');
 
             dispatch({
                 type: 'OBETENER_USUARIO',
@@ -74,9 +76,9 @@ const UserState = (props) => {
             })
          }
         catch (error) {
+           console.error('Error verificando usuario:', error);
            return;
         }   
-
     }
 
     const updateUser = async (form) => {
