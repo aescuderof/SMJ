@@ -12,8 +12,6 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-connectDB();
-
 const whiteList = [
   'http://localhost:3000',
   'http://localhost:5173',
@@ -71,6 +69,16 @@ app.get('/users', async (req, res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log('El servidor está corriendo en el puerto ' + PORT);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log('El servidor está corriendo en el puerto ' + PORT);
+    });
+  } catch (error) {
+    console.error('No se pudo iniciar el servidor:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
