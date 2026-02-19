@@ -38,4 +38,25 @@
   .btn-nav-secundario {
           @apply ml-4 rounded-lg border border-dust-grey-500 px-4 py-2 font-medium text-dust-grey-500 transition hover:text-dust-grey-50 hover:bg-dust-grey-500 lg:px-4;
   }
+
+
+  .form-label {
+          @apply block text-sm font-semibold text-dust-grey-900;
+  } 
+
+   .form-input {
+            @apply block w-full rounded-md bg-white px-3.5 py-2 text-base text-dust-grey-900 outline-1 -outline-offset-1 outline-dust-grey-300 placeholder:text-dust-grey-400 focus:outline-2 focus:-outline-offset-2 focus:outline-dust-grey-500;
+   }
+   
+    .form-textarea {
+            @apply block w-full rounded-md bg-white px-3.5 py-2 text-base text-dust-grey-900 outline-1 -outline-offset-1 outline-dust-grey-300 placeholder:text-dust-grey-400 focus:outline-2 focus:-outline-offset-2 focus:outline-dust-grey-500;
+   }
+
+   .titles {
+            @apply text-4xl font-semibold tracking-tight text-dust-grey-700 sm:text-5xl mx-auto max-w-2xl text-center; 
+   }
+
+   .form-button {
+            @apply block w-full rounded-md bg-dust-grey-700 px-3.5 py-2.5 text-center text-sm font-semibold text-dust-grey-50 transition hover:bg-dust-grey-800 disabled:cursor-not-allowed disabled:opacity-70;
+   }
 }

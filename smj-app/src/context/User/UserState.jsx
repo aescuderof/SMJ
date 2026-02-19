@@ -30,7 +30,7 @@ const UserState = (props) => {
                 type: 'REGISTRO_EXITOSO',
                 payload: response.data.user
             })
-            return;
+            return true;
         }
         catch (error) {
             console.error(error);

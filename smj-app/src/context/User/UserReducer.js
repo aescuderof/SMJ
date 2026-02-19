@@ -1,5 +1,5 @@
 const UserReducer = (globaState, action) => {
-  switch (key) {
+  switch (action.type) {
     case 'REGISTRO_EXITOSO':
       return {
         ...globaState,

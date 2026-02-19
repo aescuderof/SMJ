@@ -68,7 +68,7 @@ const Contact = () => {
       </div>
 
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className="text-4xl font-semibold tracking-tight text-dust-grey-700 sm:text-5xl">Contacto</h1>
+        <h1 className="titles">Contacto</h1>
         <p className="mt-3 text-lg text-dust-grey-800">
           ¿Tienes dudas sobre tallas, materiales o pedidos personalizados? Estamos para ayudarte.
         </p>
