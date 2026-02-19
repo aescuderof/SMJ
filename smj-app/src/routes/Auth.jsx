@@ -1,3 +1,5 @@
+// ./src/routes/Auth.js
+
 import { useContext, useEffect } from "react";
 
 import { Navigate } from "react-router-dom";
@@ -13,4 +15,3 @@ export default function AuthRoute({ component: Component }) {
 
   return <>{authStatus ? <Navigate replace to="/" /> : <Component />}</>;
 }
- 
