@@ -14,7 +14,7 @@ const UserReducer = (globaState, action) => {
           
         }
 
-      case 'OBETENER_USUARIO':
+      case 'OBTENER_USUARIO':
         return {
           ...globaState,
           currentUser: action.payload,
@@ -33,6 +33,25 @@ const UserReducer = (globaState, action) => {
           },
           authStatus: false,
         }
+
+        case 'CHANGE_STATUS_LOADING':
+          return {
+            ...globaState,
+            globalLoading: action.dispatch,
+          }
+
+          case "GET_CHECKOUT_SESSION":
+            return {
+              ...globaState,
+              sessionURL: action.payload,
+            }
+
+            case "GET_CART":
+              return {
+                ...globaState,
+                cart: action.payload,
+              } 
+
 	default:
 	  return globaState;
   }

@@ -10,6 +10,8 @@ import SingleProduct from "./components/Product/Single";
 import Contact from "./components/Contact";
 import CartState from "./context/Cart/CartState";
 import AuthRoute from "./routes/Auth";
+import PrivateRoute from "./routes/Private";
+import Profile from "./components/Profile";
 import { Component } from "react";  
 
 const Router = () => {
@@ -31,6 +33,12 @@ const Router = () => {
                     <Route
                 path="/iniciar-sesion"
                 element={<AuthRoute component={Login} />}
+              />
+
+            
+              <Route 
+                path="/perfil"
+                element={<PrivateRoute component={Profile} />}
               />
               
 

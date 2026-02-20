@@ -15,6 +15,12 @@ const ProductReducer = (globalState, action) => {
             return newState;
         }
 
+        case 'OBTENER_PRODUCTO': {
+            return {
+                ...globalState,
+                currentProduct: action.payload
+            }
+        }  
        
 
         default:

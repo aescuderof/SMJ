@@ -1,26 +1,8 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import CartContext from "../../../context/Cart/CartContext";
+import { formatCLP } from "../../../utils/formatCLP";
+import UserContext from "../../../context/User/UserContext";
 import ProductContext from "../../../context/Product/ProductContext";
-
-function StarRow({ value = 4 }) {
-  const stars = useMemo(() => Array.from({ length: 5 }, (_, i) => i < value), [value]);
-  return (
-    <div className="flex items-center gap-1">
-      {stars.map((filled, idx) => (
-        <svg
-          key={idx}
-          viewBox="0 0 20 20"
-          className={`h-4 w-4 ${filled ? "text-dust-grey-700" : "text-dust-grey-300"}`}
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.16c.969 0 1.371 1.24.588 1.81l-3.366 2.447a1 1 0 00-.364 1.118l1.286 3.957c.3.921-.755 1.688-1.539 1.118l-3.366-2.447a1 1 0 00-1.176 0l-3.366 2.447c-.783.57-1.838-.197-1.539-1.118l1.286-3.957a1 1 0 00-.364-1.118L1.09 9.384c-.783-.57-.38-1.81.588-1.81h4.16a1 1 0 00.95-.69l1.286-3.957z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
+import { useContext, useEffect, useState, useMemo } from "react";
 
 function AccordionItem({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -52,149 +34,192 @@ function AccordionItem({ title, children, defaultOpen = false }) {
 }
 
 const SingleProduct = () => {
+  const [quantity, setQuantity] = useState(1);
   const location = useLocation();
   const { slug } = useParams();
-  const { product: stateProduct } = location.state || {};
-  const { products, getProducts } = useContext(ProductContext);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const { addToCart } = useContext(CartContext);
-  const product = stateProduct || products.find((item) => item.slug === slug);
+
+  const userCtx = useContext(UserContext);
+  const { authStatus, cart, editCart, getCart } = userCtx;
+
+  const productCtx = useContext(ProductContext);
+  const { products, getProducts, setCurrentProduct } = productCtx;
+
+  // Calcular el producto de forma derivada y reactiva
+  const product = useMemo(() => {
+    return location?.state?.product || products.find((p) => p.slug === slug);
+  }, [location?.state?.product, products, slug]);
 
   useEffect(() => {
-    if (!stateProduct && products.length === 0) {
+    // Si no hay productos cargados, cargarlos
+    if (!location?.state?.product && products.length === 0) {
       getProducts();
     }
-  }, [stateProduct, products.length, getProducts]);
+  }, [location?.state?.product, products.length, getProducts]);
+
+  const currentProductCtx = productCtx.currentProduct;
+  useEffect(() => {
+    if (
+      product &&
+      (
+        !currentProductCtx ||
+        !currentProductCtx._id ||
+        product._id !== currentProductCtx._id
+      )
+    ) {
+      setCurrentProduct(product);
+    }
+  }, [product, setCurrentProduct, currentProductCtx]);
+
+  useEffect(() => {
+    if (product && authStatus) {
+      getCart();
+    }
+  }, [product, authStatus, getCart]);
+
+  const handleChange = (e) => {
+    setQuantity(Number(e.target.value));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (quantity === 0) return;
+
+    const item = {
+      priceID: product.priceID || product._id,
+      name: product.nombre || product.name,
+      quantity,
+      price: product.precio || product.price,
+      img: product.images?.[0] || product.img,
+      slug: product.slug,
+    };
+
+    const existingItemIndex = cart.findIndex(
+      (el) => el.priceID === item.priceID
+    );
+
+    let updatedCart;
+
+    if (existingItemIndex !== -1) {
+      // Si ya existe, actualiza la cantidad
+      updatedCart = cart.map((el, i) =>
+        i === existingItemIndex ? { ...el, quantity: item.quantity } : el
+      );
+    } else {
+      // Si no existe, agrega el nuevo ítem
+      updatedCart = [...cart, item];
+    }
+
+    await editCart(updatedCart);
+  };
 
   if (!product) {
-    const statusMessage = products.length === 0 ? "Cargando producto..." : "Producto no encontrado";
-
     return (
-      <main>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <p className="text-center text-dust-grey-500">{statusMessage}</p>
-          <Link to="/products" className="mt-4 block text-center text-dust-grey-700 hover:underline">
-            Volver a productos
-          </Link>
-        </div>
+      <main className="max-w-5xl mx-auto pt-8 pb-24 px-6">
+        <p className="text-center text-dust-grey-500">Cargando producto...</p>
       </main>
     );
   }
-
-  const images = (product.images?.length ? product.images : [product.img]).filter(Boolean);
-  const activeImage = images[activeIndex] ?? images[0];
+  
+  const nombre = product.nombre || product.name;
+  const descripcion = product.descripcion || product.description;
+  const imagen = product.images?.[0] || product.img;
+  const precio = product.precio || product.price;
+  const quantityOptions = [0, 1, 2, 3, 4, 5];
 
   return (
-    <main className="bg-dust-grey-50">
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        {/* Optional breadcrumb (simple + dynamic) */}
-        <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link to="/products" className="font-medium text-dust-grey-900 hover:text-dust-grey-700">
-              Tienda
-              </Link>
-            </li>
-            <li className="text-dust-grey-300">/</li>
-            <li className="font-medium text-dust-grey-500">{product.nombre}</li>
-          </ol>
-        </nav>
-
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-          {/* LEFT: main image + thumbnails */}
-          <div>
-            <div className="overflow-hidden rounded-2xl bg-dust-grey-100 ring-1 ring-dust-grey-200">
-              <div className="aspect-square w-full">
-                <img
-                  src={activeImage}
-                  alt={product.nombre}
-                  className="h-full w-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-4 gap-3">
-              {images.slice(0, 4).map((src, idx) => {
-                const active = idx === activeIndex;
-                return (
-                  <button
-                    key={`${src}-${idx}`}
-                    type="button"
-                    onClick={() => setActiveIndex(idx)}
-                    className={[
-                      "overflow-hidden rounded-xl ring-1 transition",
-                      active ? "ring-dust-grey-700" : "ring-dust-grey-200 hover:ring-dust-grey-300",
-                    ].join(" ")}
-                    aria-label={`Ver imagen ${idx + 1}`}
-                  >
-                    <div className="aspect-square bg-dust-grey-100">
-                      <img src={src} alt="" className="h-full w-full object-contain" />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* RIGHT: title, price, rating, description, CTA */}
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-dust-grey-900 sm:text-3xl">
-              {product.nombre}
-            </h1>
-
-            <p className="mt-3 text-3xl tracking-tight text-dust-grey-900">
-              {product.currency ? `${product.currency} ` : "$"}
-              {product.precio}
-            </p>
-
-            
-
-            <p className="mt-6 text-sm leading-6 text-dust-grey-600">{product.descripcion}</p>
-
-            
-           
-
-            {/* CTA row */}
-            <div className="mt-10 flex items-center gap-4">
-              <button
-                type="button"
-                className="w-full rounded-xl bg-dust-grey-700 px-8 py-3 text-base font-semibold text-dust-grey-50 shadow-sm transition hover:bg-dust-grey-800 focus:outline-none focus:ring-2 focus:ring-dust-grey-500/40"
-                onClick={() => {
-                  addToCart(product, 1);
-                }}
-              >
-                Añadir al carrito
-              </button>
-
+    <main className="max-w-5xl mx-auto pt-2 pb-24 px-6">
+      <nav aria-label="Breadcrumb" className="mb-4">
+                <ol className="flex items-center space-x-2 text-sm">
+                  <li>
+                    <Link to="/products" className="font-medium text-dust-grey-900 hover:text-dust-grey-700">
+                    Tienda
+                    </Link>
+                  </li>
+                  <li className="text-dust-grey-300">/</li>
+                  <li className="font-medium text-dust-grey-500">{product.nombre}</li>
+                </ol>
+              </nav>
               
-            </div>
+      <div className="grid lg:grid-cols-2 gap-12">
+        {/* Info */}
+        <section>
+          <h1 className="text-2xl font-bold tracking-tight text-dust-grey-800 sm:text-3xl">{nombre}</h1>
+          <p className="text-mt-6 text-sm leading-6 text-dust-grey-600">{descripcion}</p>
+          <p className="mt-3 text-3xl tracking-tight text-dust-grey-900">
+            Precio: {formatCLP(precio)}
+          </p>
 
-           
-            <div className="mt-10">
-              <AccordionItem title="Detalles" defaultOpen>
-                <ul className="list-disc space-y-2 pl-5">
-                  <li>Piedras naturales</li>
-                  <li>Broches & cierres de bronce bañado en oro o plata</li>
-                  <li>Hechos a mano</li>
-                </ul>
-              </AccordionItem>
+          {/* Select cantidad */}
+          {authStatus && (
+            <form onSubmit={handleSubmit} className="mt-8">
+              <label className="block mb-2 font-medium text-gray-700">
+                Cantidad
+              </label>
+              <select
+                className="w-32 border border-gray-300 rounded-md p-2"
+                value={quantity}
+                onChange={handleChange}
+              >
+                {quantityOptions.map((q) => (
+                  <option key={q} value={q}>
+                    {q}
+                  </option>
+                ))}
+              </select>
 
-              <AccordionItem title="Cuidados">
-                <ul className="list-disc space-y-2 pl-5">
-                  <li>Evita el agua, quítatelo antes de nadar, ducharte o hacer deporte.</li>
-                  <li>Guárdalos lejos de la luz solar, la exposición prolongada al sol puede desteñirlas.</li>
-                  <li>No apliques perfumes o productos de cuidado personal sobre tus accesorios.</li>
-                  <li><span className="font-bold">Tip extra: </span>Si estás pensando en limpiar tus joyas o accesorios, recuerda usar siempre un paño seco y suave para no rayar el material.</li>
-                </ul>
-              </AccordionItem>
+              <button
+                type="submit"
+                className="btn-product mt-6"
+                disabled={quantity === 0}
+              >
+                {cart.length ? "Modificar carrito" : "Agregar al carrito"}
+              </button>
+            </form>
+          )}
 
-              <AccordionItem title="Envío">
-                <p>Despacho estimado 2–7 días hábiles.</p>
-              </AccordionItem>
-            </div>
+          {!authStatus && (
+            <Link to="/registro">
+              <button className="mt-10 w-full rounded-xl bg-dust-grey-700 px-8 py-3 text-base font-semibold text-dust-grey-50 shadow-sm transition hover:bg-dust-grey-800 focus:outline-none focus:ring-2 focus:ring-dust-grey-500/40"
+>
+                Regístrate para comprar
+              </button>
+            </Link>
+          )}
+
+          {/* Accordion Items debajo del botón */}
+          <div className="mt-10">
+            <AccordionItem title="Detalles" defaultOpen>
+              <ul className="list-disc space-y-2 pl-5">
+                <li>Piedras naturales</li>
+                <li>Broches & cierres de bronce bañado en oro o plata</li>
+                <li>Hechos a mano</li>
+              </ul>
+            </AccordionItem>
+
+            <AccordionItem title="Cuidados">
+              <ul className="list-disc space-y-2 pl-5">
+                <li>Evita el agua, quítatelo antes de nadar, ducharte o hacer deporte.</li>
+                <li>Guárdalos lejos de la luz solar, la exposición prolongada al sol puede desteñirlas.</li>
+                <li>No apliques perfumes o productos de cuidado personal sobre tus accesorios.</li>
+                <li><span className="font-bold">Tip extra: </span>Si estás pensando en limpiar tus joyas o accesorios, recuerda usar siempre un paño seco y suave para no rayar el material.</li>
+              </ul>
+            </AccordionItem>
+
+            <AccordionItem title="Envío">
+              <p>Despacho estimado 2–7 días hábiles.</p>
+            </AccordionItem>
           </div>
-        </div>
+        </section>
+
+        {/* Imagen */}
+        <figure>
+          <img
+            src={imagen}
+            alt={descripcion}
+            className="h-full w-full object-contain rounded-lg shadow-md"
+          />
+        </figure>
       </div>
     </main>
   );

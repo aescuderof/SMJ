@@ -1,9 +1,10 @@
 import { useCallback, useReducer } from "react";
 import ProductContext from "./ProductContext";
 import ProductReducer from "./ProductReducer";
-import axiosClient from "../../config/axiosClient";
+import axiosClient from "../../config/axios";
 import mockProducts from "../../data/mockProducts";
 import { ShelvingUnit } from "lucide-react";
+
 
 const ProductState = (props) => {
  const initialState = {
@@ -21,6 +22,13 @@ const ProductState = (props) => {
 
 
 const [globalState, dispatch] = useReducer(ProductReducer, initialState);  
+
+const setCurrentProduct = (product) => {
+    dispatch({
+        type: 'OBTENER_PRODUCTO',
+        payload: product
+    })
+}
 
 const useMockProducts = import.meta.env.VITE_USE_MOCK_PRODUCTS === 'true';
 
@@ -62,7 +70,7 @@ return (
     <ProductContext.Provider value={{
         products: globalState.products,
         currentProduct: globalState.currentProduct,
-        getProducts
+        getProducts, setCurrentProduct,
         }}>
         {props.children}
     </ProductContext.Provider>

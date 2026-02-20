@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 
 import { Navigate } from "react-router-dom";
 
-import UserContext from "../contexts/User/UserContext";
+import UserContext from "../context/User/UserContext";
 
 export default function PrivateRoute({ component: Component }) {
   const userCtx = useContext(UserContext);
