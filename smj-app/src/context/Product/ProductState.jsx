@@ -32,7 +32,7 @@ const setCurrentProduct = (product) => {
 
 const useMockProducts = import.meta.env.VITE_USE_MOCK_PRODUCTS === 'true';
 
-const getProducts = useCallback(async () => {
+const getProducts = useCallback(async (page = 1, limit = 12) => {
     if (useMockProducts) {
         dispatch({
             type: 'OBTENER_PRODUCTOS',
@@ -42,23 +42,14 @@ const getProducts = useCallback(async () => {
     }
 
     try {
-        console.log('axiosClient baseURL:', axiosClient.defaults.baseURL);
-        console.log('Haciendo petición GET a /products');
-        const response = await axiosClient.get('/products');
-        console.log('Respuesta completa:', response);
-        console.log('Datos recibidos:', response.data);
-        console.log('Productos:', response.data.products);
-
+        const response = await axiosClient.get(`/products?page=${page}&limit=${limit}`);
         const apiProducts = response?.data?.products;
-
+        // Puedes guardar info de paginación en el estado global si lo necesitas
         dispatch({
             type: 'OBTENER_PRODUCTOS',
             payload: Array.isArray(apiProducts) ? apiProducts : mockProducts
         })
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        console.error('Error completo:', error.response);
-
+    } catch {
         dispatch({
             type: 'OBTENER_PRODUCTOS',
             payload: mockProducts

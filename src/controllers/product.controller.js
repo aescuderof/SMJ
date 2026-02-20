@@ -5,14 +5,32 @@ const stripe = process.env.STRIPE_KEY
 
 
 exports.getAllProducts = async (req, res) => {
-      try {
-    const products = await Product.find({});
-    return res.status(200).json({ products })
+  try {
+    // Obtener parámetros de paginación
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const skip = (page - 1) * limit;
+
+    // Obtener total de productos
+    const total = await Product.countDocuments();
+
+    // Obtener productos paginados
+    const products = await Product.find({})
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      products,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    });
   } catch (error) {
     return res.status(500).json({
       message: 'Hubo un error al obtener los productos',
       error: error.message
-    })
+    });
   }
 }
 

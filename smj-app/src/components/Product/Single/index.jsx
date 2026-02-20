@@ -2,7 +2,8 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { formatCLP } from "../../../utils/formatCLP";
 import UserContext from "../../../context/User/UserContext";
 import ProductContext from "../../../context/Product/ProductContext";
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState } from "react";
+import axiosClient from "../../../config/axiosClient";
 
 function AccordionItem({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -34,7 +35,9 @@ function AccordionItem({ title, children, defaultOpen = false }) {
 }
 
 const SingleProduct = () => {
+    const [loading, setLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const { slug } = useParams();
 
@@ -45,14 +48,40 @@ const SingleProduct = () => {
   const { products, getProducts, setCurrentProduct } = productCtx;
 
   // Calcular el producto de forma derivada y reactiva
-  const product = useMemo(() => {
-    return location?.state?.product || products.find((p) => p.slug === slug);
-  }, [location?.state?.product, products, slug]);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    // Si viene por state, usarlo
+    if (location?.state?.product) {
+      setProduct(location.state.product);
+      return;
+    }
+    // Petición directa por slug
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosClient.get(`/products?page=1&limit=100`); // O endpoint específico si existe
+        const found = response.data.products.find((p) => p.slug === slug);
+        if (found) setProduct(found);
+        else setError('Producto no encontrado');
+      } catch {
+        setError('Error al cargar el producto. Intenta nuevamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [location?.state?.product, slug]);
 
   useEffect(() => {
     // Si no hay productos cargados, cargarlos
     if (!location?.state?.product && products.length === 0) {
-      getProducts();
+      setLoading(true);
+      getProducts()
+        .catch(() => {
+          setError('Error al cargar los productos. Intenta nuevamente.');
+        })
+        .finally(() => setLoading(false));
     }
   }, [location?.state?.product, products.length, getProducts]);
 
@@ -113,10 +142,19 @@ const SingleProduct = () => {
     await editCart(updatedCart);
   };
 
-  if (!product) {
+  if (error) {
     return (
       <main className="max-w-5xl mx-auto pt-8 pb-24 px-6">
+        <p className="text-center text-red-500">{error}</p>
+      </main>
+    );
+  }
+  if (loading || !product) {
+    return (
+      <main className="max-w-5xl mx-auto pt-8 pb-24 px-6 flex flex-col items-center justify-center">
+        <div className="loader mb-4" style={{width: '48px', height: '48px', border: '6px solid #ccc', borderTop: '6px solid #333', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
         <p className="text-center text-dust-grey-500">Cargando producto...</p>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
       </main>
     );
   }

@@ -1,15 +1,21 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import ProductContext from "../../../context/Product/ProductContext.js";
+import UserContext from "../../../context/User/UserContext";
 import { Link } from "react-router-dom";
 
 const ProductList = () => {
-  const ctx = useContext(ProductContext);
-  const { products, getProducts, addToCart } = ctx;
+  const productCtx = useContext(ProductContext);
+  const { products, getProducts } = productCtx;
+  const userCtx = useContext(UserContext);
+  const { cart, editCart } = userCtx;
+  const [cartMsg, setCartMsg] = React.useState("");
 
   useEffect(() => {
-    console.log("Llamando a getProducts...");
-    getProducts();
-  }, [getProducts]);
+    if (products.length === 0) {
+      console.log("Llamando a getProducts...");
+      getProducts();
+    }
+  }, [products.length, getProducts]);
 
   return (
     <>
@@ -68,7 +74,36 @@ const ProductList = () => {
                 type="button"
                 className="w-full btn-product-secundario mb-5"
                 onClick={() => {
-                  addToCart(product, 1);
+                  // Crear item para el carrito
+                    const item = {
+                      priceID: product.priceID || product._id,
+                      name: product.nombre || product.name,
+                      quantity: 1,
+                      price: product.precio || product.price,
+                      image: product.images?.[0] || product.img,
+                      slug: product.slug,
+                    };
+                  // Buscar si ya existe
+                  const existingItemIndex = cart.findIndex(
+                    (el) => el.priceID === item.priceID
+                  );
+                  let updatedCart;
+                  if (existingItemIndex !== -1) {
+                    updatedCart = cart.map((el, i) =>
+                      i === existingItemIndex ? { ...el, quantity: item.quantity } : el
+                    );
+                  } else {
+                    updatedCart = [...cart, item];
+                  }
+                  editCart(updatedCart)
+                    .then((msg) => {
+                      setCartMsg(msg || "Producto añadido al carrito");
+                      console.log("Respuesta editCart:", msg);
+                    })
+                    .catch((err) => {
+                      setCartMsg("Error al añadir al carrito");
+                      console.error("Error editCart:", err);
+                    });
                 }}
               >
                 Añadir al carrito
@@ -79,6 +114,12 @@ const ProductList = () => {
     })
   )}
 </section>
+
+    {cartMsg && (
+      <div className="w-full text-center text-green-600 font-semibold mb-4">
+        {cartMsg}
+      </div>
+    )}
 
  
     </>

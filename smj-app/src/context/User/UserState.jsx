@@ -134,12 +134,18 @@ const UserState = (props) => {
         try {
             const response = await axiosClient.get('/carts/get-cart');
             console.log('respuesta del carrito', response);
+            const cartData = response.data.cart;
+            const products = cartData && Array.isArray(cartData.products) ? cartData.products : [];
             dispatch({
                 type: "GET_CART",
-                payload: response.data.cart.products
+                payload: products
             })
         } catch (error) {
             console.error(error);
+            dispatch({
+                type: "GET_CART",
+                payload: []
+            });
             return;
         }
     }

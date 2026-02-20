@@ -3,13 +3,18 @@ import { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/User/UserContext";
 
 export default function Profile() {
+  const [loading, setLoading] = useState(true);
 
   const userCtx = useContext(UserContext);
 
   const { updateUser } = userCtx;
 
-  const { username, email, country, address, zipcode } =
-    userCtx.currentUser;
+  const { currentUser } = userCtx;
+  const username = currentUser && currentUser.username ? currentUser.username : "";
+  const email = currentUser && currentUser.email ? currentUser.email : "";
+  const country = currentUser && currentUser.country ? currentUser.country : "";
+  const address = currentUser && currentUser.address ? currentUser.address : "";
+  const zipcode = currentUser && currentUser.zipcode ? currentUser.zipcode : "";
 
   const [userForm, setUserForm] = useState({
     username: "",
@@ -19,17 +24,22 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    const updateData = () => {
-      return setUserForm({
+    const checkUser = async () => {
+      setLoading(true);
+      if (!userCtx.authStatus) {
+        await userCtx.verifyUser();
+      }
+      setUserForm({
         ...userForm,
         username,
         country,
         address,
         zipcode,
       });
+      setLoading(false);
     };
-
-    updateData();
+    checkUser();
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = async (event) => {
@@ -45,6 +55,22 @@ export default function Profile() {
     await updateUser(userForm);
   };
 
+  if (loading) {
+    return (
+      <main className="max-w-5xl mx-auto pt-8 pb-24 px-6 flex flex-col items-center justify-center">
+        <div className="loader mb-4" style={{width: '48px', height: '48px', border: '6px solid #ccc', borderTop: '6px solid #333', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
+        <p className="text-center text-dust-grey-500">Cargando perfil...</p>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+      </main>
+    );
+  }
+  if (!userCtx.authStatus) {
+    return (
+      <main className="max-w-5xl mx-auto pt-8 pb-24 px-6">
+        <p className="text-center text-red-500">No estás autenticado. Inicia sesión para ver tu perfil.</p>
+      </main>
+    );
+  }
   return (
     <>
       <div className="mx-auto py-4 px-8">
@@ -64,7 +90,6 @@ export default function Profile() {
                       información real. 😉
                     </p>
                   </div>
-
                   <div className="mt-6 grid grid-cols-4 gap-6">
                     <div className="col-span-4 sm:col-span-2">
                       <label className="form-label">Tu nombre de usuario</label>

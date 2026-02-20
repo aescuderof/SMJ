@@ -6,9 +6,11 @@ const Home = () => {
   const ctx = useContext(ProductContext);
   const { products, getProducts, addToCart } = ctx;
 
-	useEffect(() => {
-		getProducts();
-	}, [getProducts]);
+  useEffect(() => {
+    if (products.length === 0) {
+      getProducts();
+    }
+  }, [products.length, getProducts]);
 
 	// Mostrar solo los últimos 4 productos
 	const latestProducts = products.slice(-4).reverse();

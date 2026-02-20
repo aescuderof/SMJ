@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import UserContext from "../../context/User/UserContext";
 
 export default function Header() {
+    const navigate = window.location ? null : undefined;
+    // Si usas React Router v6, importa useNavigate arriba y usa:
+    // import { useNavigate } from "react-router-dom";
+    // const navigate = useNavigate();
   const {
     currentUser,
     cart,
@@ -21,7 +25,7 @@ export default function Header() {
     verifyUser();
     getCart();
     setLoading(false);
-  }, [getCart, setLoading, verifyUser]);
+  }, []); // Solo al montar
 
   useEffect(() => {
     getCart();
@@ -97,7 +101,13 @@ export default function Header() {
                 <span className="btn-cart-quantity">{total}</span>
               </Link>
 
-              <Link to="/" className=" px-6 py-3 h-12 min-w-20 flex items-center gap-2" onClick={logout}>
+              <button
+                className="px-6 py-3 h-12 min-w-20 flex items-center gap-2"
+                onClick={() => {
+                  logout();
+                  if (typeof navigate === 'function') navigate('/');
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
@@ -112,9 +122,8 @@ export default function Header() {
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   />
                 </svg>
-
                 Salir
-              </Link>
+              </button>
             </>
           ) : (
             <>
